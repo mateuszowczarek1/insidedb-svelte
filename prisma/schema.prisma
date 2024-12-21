@@ -21,30 +21,60 @@ enum userRole {
 
 model User {
   id         String   @id @default(cuid())
-  avatar_url String   @db.VarChar(255)
+  avatarUrl String   @db.VarChar(255)
   email      String   @unique @db.VarChar(255)
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   username   String   @db.VarChar(255)
-  user_role  userRole @default(SILAN)
+  userRole  userRole @default(SILAN)
   limited    Boolean  @default(false)
   Recipe     Recipe[]
 }
 
 model Recipe {
-  id          String   @id @default(uuid())
-  created_at  DateTime @default(now())
-  updated_at  DateTime @updatedAt
-  title       String   @db.VarChar(255)
-  subtitle    String   @db.VarChar(255)
-  ingredients String   @db.Text
-  description String   @db.Text
-  author_id   String
-  author      User     @relation(fields: [author_id], references: [id])
+  id          String       @id @default(uuid())
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  title       String       @db.VarChar(255)
+  subtitle    String       @db.VarChar(255)
+  ingredients String       @db.Text
+  description String       @db.Text
+  authorId   String
+  author      User         @relation(fields: [authorId], references: [id])
+  category    Category     @relation(fields: [categoryId], references: [id])
+  categoryId String
+  MenuRecipe  MenuRecipe[]
 }
 
-model AllowedEmails {
-  id          String   @id @default(uuid())
-  created_at  DateTime @default(now())
-  updated_at  DateTime @updatedAt
+model Menu {
+  id         String       @id @default(uuid())
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  title      String       @db.VarChar(255)
+  current    Boolean      @default(false)
+  MenuRecipe MenuRecipe[]
+}
+
+model MenuRecipe {
+  recipe     Recipe   @relation(fields: [recipeId], references: [id])
+  recipeId   String
+  menu       Menu     @relation(fields: [menuId], references: [id])
+  menuId     String
+  createdAt DateTime @default(now())
+
+  @@id([recipeId, menuId])
+}
+
+model Category {
+  id         String   @id @default(uuid())
+  name       String   @db.VarChar(255)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Recipe     Recipe[]
+}
+
+model AllowedEmail {
+  id         String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
