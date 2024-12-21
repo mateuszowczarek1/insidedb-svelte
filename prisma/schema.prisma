@@ -20,61 +20,82 @@ enum userRole {
 }
 
 model User {
-  id         String   @id @default(cuid())
+  id        String   @id @default(cuid())
   avatarUrl String   @db.VarChar(255)
-  email      String   @unique @db.VarChar(255)
+  email     String   @unique @db.VarChar(255)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  username   String   @db.VarChar(255)
+  username  String   @db.VarChar(255)
   userRole  userRole @default(SILAN)
-  limited    Boolean  @default(false)
-  Recipe     Recipe[]
+  limited   Boolean  @default(false)
+  Recipe    Recipe[]
 }
 
 model Recipe {
-  id          String       @id @default(uuid())
-  createdAt  DateTime     @default(now())
-  updatedAt  DateTime     @updatedAt
-  title       String       @db.VarChar(255)
-  subtitle    String       @db.VarChar(255)
-  ingredients String       @db.Text
-  description String       @db.Text
-  authorId   String
-  author      User         @relation(fields: [authorId], references: [id])
-  category    Category     @relation(fields: [categoryId], references: [id])
-  categoryId String
-  MenuRecipe  MenuRecipe[]
+  id             String           @id @default(uuid())
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  title          String           @db.VarChar(255)
+  subtitle       String           @db.VarChar(255)
+  ingredients    String           @db.Text
+  description    String           @db.Text
+  authorId       String
+  author         User             @relation(fields: [authorId], references: [id])
+  category       Category         @relation(fields: [categoryId], references: [id])
+  categoryId     String
+  MenuRecipe     MenuRecipe[]
+  CombinedRecipe CombinedRecipe[]
 }
 
 model Menu {
   id         String       @id @default(uuid())
-  createdAt DateTime     @default(now())
-  updatedAt DateTime     @updatedAt
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
   title      String       @db.VarChar(255)
   current    Boolean      @default(false)
   MenuRecipe MenuRecipe[]
 }
 
 model MenuRecipe {
-  recipe     Recipe   @relation(fields: [recipeId], references: [id])
-  recipeId   String
-  menu       Menu     @relation(fields: [menuId], references: [id])
-  menuId     String
+  recipe    Recipe   @relation(fields: [recipeId], references: [id])
+  recipeId  String
+  menu      Menu     @relation(fields: [menuId], references: [id])
+  menuId    String
   createdAt DateTime @default(now())
 
   @@id([recipeId, menuId])
 }
 
 model Category {
-  id         String   @id @default(uuid())
-  name       String   @db.VarChar(255)
+  id        String   @id @default(uuid())
+  name      String   @db.VarChar(255)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  Recipe     Recipe[]
+  Recipe    Recipe[]
 }
 
 model AllowedEmail {
-  id         String   @id @default(uuid())
+  id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Combined {
+  id             String           @id @default(uuid())
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  title          String           @db.VarChar(255)
+  subtitle       String           @db.VarChar(255)
+  current        Boolean          @default(false)
+  CombinedRecipe CombinedRecipe[]
+}
+
+model CombinedRecipe {
+  recipe     Recipe   @relation(fields: [recipeId], references: [id])
+  recipeId   String
+  combined   Combined @relation(fields: [combinedId], references: [id])
+  combinedId String
+  createdAt  DateTime @default(now())
+
+  @@id([recipeId, combinedId])
 }
