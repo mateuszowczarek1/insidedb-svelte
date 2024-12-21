@@ -1,0 +1,12 @@
+services:
+  db:
+    image: mysql:9.1.0
+    user: "999:999"
+    volumes:
+      - ./docker-data:/var/lib/mysql
+    restart: always
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: insidedb
