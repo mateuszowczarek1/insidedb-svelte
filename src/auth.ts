@@ -3,6 +3,7 @@ import { PrismaAdapter } from '@auth/prisma-adapter';
 import { SvelteKitAuth } from '@auth/sveltekit';
 import Google from '@auth/sveltekit/providers/google';
 import { prisma } from './prisma';
+import type { Account } from '@prisma/client';
 
 export const { handle, signIn, signOut } = SvelteKitAuth({
 	adapter: PrismaAdapter(prisma),
@@ -46,19 +47,19 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
 				await prisma.account.create({
 					data: {
 						userId: newUser.id,
-						provider: account.provider,
-						providerAccountId: account.providerAccountId,
-						access_token: account.access_token,
-						refresh_token: account.refresh_token,
+						provider: account!.provider,
+						providerAccountId: account!.providerAccountId,
+						access_token: account!.access_token,
+						refresh_token: account!.refresh_token,
 						type: 'google'
-					}
+					} as Account
 				});
 				return true;
 			}
 
 			// Check if the account for the existing user already exists
 			const existingAccount = await prisma.account.findFirst({
-				where: { userId: existingUser.id, provider: account.provider }
+				where: { userId: existingUser.id, provider: account!.provider }
 			});
 
 			// If the account doesn't exist, create it
@@ -66,17 +67,17 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
 				await prisma.account.create({
 					data: {
 						userId: existingUser.id,
-						provider: account.provider,
-						providerAccountId: account.providerAccountId,
-						access_token: account.access_token,
-						refresh_token: account.refresh_token,
+						provider: account!.provider,
+						providerAccountId: account!.providerAccountId,
+						access_token: account!.access_token,
+						refresh_token: account!.refresh_token,
 						type: 'google'
-					}
+					} as Account
 				});
 			}
 
 			// Return true once user and account checks pass
 			return true;
 		}
-	}
+	},
 });
