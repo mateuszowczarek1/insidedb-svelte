@@ -2,8 +2,9 @@ import { AUTH_SECRET, GOOGLE_AUTH_CLIENT_ID, GOOGLE_AUTH_SECRET } from '$env/sta
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import { SvelteKitAuth } from '@auth/sveltekit';
 import Google from '@auth/sveltekit/providers/google';
-import { prisma } from './prisma';
 import type { Account } from '@prisma/client';
+import { prisma } from './prisma';
+import type { SessionUser } from './types/SessionUserInterface';
 
 export const { handle, signIn, signOut } = SvelteKitAuth({
 	adapter: PrismaAdapter(prisma),
@@ -78,6 +79,17 @@ export const { handle, signIn, signOut } = SvelteKitAuth({
 
 			// Return true once user and account checks pass
 			return true;
-		}
+		},
+		async session({ session, user }) {
+			const sessionUser = user as SessionUser;
+			if (sessionUser && sessionUser.userRole) {
+			  session.user = {
+				...session.user,
+				userRole: sessionUser.userRole,
+			  };
+			}
+			return session;
+		  }
 	},
 });
+

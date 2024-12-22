@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { autoModeWatcher } from '@skeletonlabs/skeleton';
 	import '../app.css';
-	import Navbar from '../components/navbar.svelte';
+	import Navbar from '../components/navbar/navbar.svelte';
 	import Hero from '../components/hero/hero.svelte';
 	import Footer from '../components/footer/footer.svelte';
   let { children } = $props();

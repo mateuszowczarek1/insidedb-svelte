@@ -2,7 +2,7 @@
 	import { Avatar } from '@skeletonlabs/skeleton';
 	import { signIn, signOut } from '@auth/sveltekit/client';
 	import { page } from '$app/state';
-	import InsideLogo from './navbar/insideLogo.svelte';
+	import InsideLogo from './insideLogo.svelte';
 	let session = page.data.session;
 </script>
 
